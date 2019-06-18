@@ -3,8 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@rmwc/textfield": "^5.5.2",
+    "@rmwc/theme": "^5.5.2",
+    "@rmwc/top-app-bar": "^5.5.2",
+    "leaflet": "^1.5.1",
+    "leaflet-geosearch": "^2.7.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-leaflet": "^2.4.0",
     "react-scripts": "3.0.1"
   },
   "scripts": {
