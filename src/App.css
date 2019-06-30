@@ -8,8 +8,13 @@ body {
 }
 
 /* Map Custom CSS */
-.map {
-  height: 80%;
+
+#mapid {
+  height: 70%;
+}
+#canvas_container {
+  border: 2px solid #444;
+  margin: 30px;
 }
 
 /* Material Icon CSS */

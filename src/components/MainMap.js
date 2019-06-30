@@ -1,92 +1,81 @@
 import React, { Component } from "react";
 import L from "leaflet";
-import Controls from "./Controls";
-import {
-  Map,
-  TileLayer,
-  Marker,
-  Popup,
-  Circle,
-  Rectangle,
-  LayerGroup,
-  FeatureGroup
-} from "react-leaflet";
 
-// Icon fix. Without marks/popups etc don't show.
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
-  iconUrl: require("leaflet/dist/images/marker-icon.png"),
-  shadowUrl: require("leaflet/dist/images/marker-shadow.png")
-});
-
-// MainMap Class
 class MainMap extends Component {
   state = {
-    center: {
-      lat: 51.505,
-      lng: -0.09
-    },
-    marker: {
-      lat: 51.505,
-      lng: -0.09
-    },
-    zoom: 13,
-    draggable: true
+    center: [49.257946402467375, -123.11622619628906],
+    zoom: 12
   };
 
-  // toggleDraggable = () => {
-  //   this.setState({ draggable: !this.state.draggable });
-  // };
+  componentDidMount() {
+    // Tile Layer declaration
+    const streets = L.tileLayer(
+      "https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}",
+      {
+        attribution:
+          'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        maxZoom: 18,
+        id: "mapbox.streets",
+        accessToken:
+          "pk.eyJ1IjoiZmxpcHBpbmRhaXN5IiwiYSI6ImNqeDJvYTJwZzAwamw0OHFubjlsZG10OWQifQ.2mnXT5FpNzrRmovIytx8Vg"
+      }
+    );
+    const hotMap = L.tileLayer(
+      "https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png",
+      {
+        maxZoom: 19,
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a> hosted by <a href="https://openstreetmap.fr/" target="_blank">OpenStreetMap France</a>'
+      }
+    );
 
-  // updatePosition = () => {
-  //   const marker = this.refmarker.current;
-  //   if (marker != null) {
-  //     this.setState({
-  //       marker: marker.leafletElement.getLatLng()
-  //     });
-  //   }
-  // };
+    // Markers and places layergroup
+    const nanaimo = L.marker([
+        49.24828238593356,
+        -123.05573701858519
+      ]).bindPopup("This is our Nanaimo Neighbourhood"),
+      downtown = L.marker([49.28146827115352, -123.12369346618652]).bindPopup(
+        "This is Downtown Vancouver"
+      ),
+      langaraCollege = L.marker([
+        49.22527721920461,
+        -123.10927391052245
+      ]).bindPopup("This is Langara College");
+
+    const places = L.layerGroup([nanaimo, downtown, langaraCollege]);
+
+    // Map initialization
+    const map = L.map("mapid", {
+      center: this.state.center,
+      zoom: this.state.zoom,
+      layers: [streets]
+    });
+
+    // Layer and Control Setup
+    var baseMaps = {
+      Streets: streets,
+      "Hot Map": hotMap
+    };
+    var overlayMaps = {
+      "Important Places": places
+    };
+    L.control.layers(baseMaps, overlayMaps).addTo(map);
+    L.control.scale().addTo(map);
+
+    // Center Marker
+    L.marker(this.state.center).addTo(map);
+
+    // define rectangle geographical bounds
+    const bounds = [[49.253, -123.111], [49.266, -123.1]];
+    // create an red rectangle
+    L.rectangle(bounds, { color: "red", weight: 2 }).addTo(map);
+  }
 
   render() {
-    const position = [this.state.center.lat, this.state.center.lng];
-    const rectangle = [
-      [this.state.center.lat, this.state.center.lng],
-      [this.state.center.lat + 0.01, this.state.center.lng + 0.04]
-    ];
-    const markerPosition = [this.state.marker.lat, this.state.marker.lng];
-
     return (
-      <Map className="map" center={position} zoom={this.state.zoom}>
-        <TileLayer
-          attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        <Marker draggable={this.state.draggable} position={markerPosition}>
-          {/* <Popup minWidth={90}>
-            <span onClick={this.toggleDraggable}>
-              {this.state.draggable ? "DRAG MARKER" : "MARKER FIXED"}
-            </span>
-          </Popup> */}
-        </Marker>
-        <LayerGroup>
-          <Circle center={position} fillColor="blue" radius={200} />
-          <LayerGroup>
-            <Circle
-              center={[51.51, -0.08]}
-              color="green"
-              fillColor="green"
-              radius={100}
-            />
-          </LayerGroup>
-        </LayerGroup>
-        <FeatureGroup color="grey">
-          <Popup>Popup in FeatureGroup</Popup>
-          <Circle center={[51.51, -0.06]} radius={200} />
-          <Rectangle bounds={rectangle} />
-        </FeatureGroup>
-        <Controls center={this.state.center} />
-      </Map>
+      <React.Fragment>
+        <div id="mapid" />
+      </React.Fragment>
     );
   }
 }

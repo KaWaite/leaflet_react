@@ -1,7 +1,7 @@
 import React from "react";
 import {
   TopAppBar,
-  TopAppBarTitle,
+  // TopAppBarTitle,
   TopAppBarRow,
   TopAppBarSection,
   TopAppBarActionItem,
@@ -9,7 +9,6 @@ import {
   TopAppBarFixedAdjust
 } from "@rmwc/top-app-bar";
 
-import "@material/textfield/dist/mdc.textfield.css";
 import "@material/top-app-bar/dist/mdc.top-app-bar.css";
 import "@material/theme/dist/mdc.theme.css";
 
@@ -20,8 +19,7 @@ export default function Header(props) {
         <TopAppBarRow>
           <TopAppBarSection alignStart>
             <i className="material-icons md-48">format_underlined</i>
-            {/* <TopAppBarNavigationIcon icon="menu" /> */}
-            <TopAppBarTitle>uDrew Maps</TopAppBarTitle>
+            {/* <TopAppBarTitle>uDrew Maps</TopAppBarTitle> */}
           </TopAppBarSection>
           <TopAppBarSection alignEnd>
             <TopAppBarActionItem icon="map" />
