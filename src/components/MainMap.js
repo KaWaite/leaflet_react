@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import L from "leaflet";
+import "leaflet.pm";
+import "leaflet.pm/dist/leaflet.pm.css";
 
 class MainMap extends Component {
   state = {
@@ -59,11 +61,17 @@ class MainMap extends Component {
     var overlayMaps = {
       "Important Places": places
     };
+
+    // Controls
     L.control.layers(baseMaps, overlayMaps).addTo(map);
     L.control.scale().addTo(map);
+    map.pm.addControls({
+      position: "bottomright",
+      drawCircle: false
+    });
 
     // Center Marker
-    L.marker(this.state.center).addTo(map);
+    L.marker(this.state.center, { draggable: true }).addTo(map);
 
     // define rectangle geographical bounds
     const bounds = [[49.253, -123.111], [49.266, -123.1]];
